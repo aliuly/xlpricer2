@@ -84,7 +84,7 @@ export default function App() {
 
   useEffect(() => {
     let cancelled = false
-    fetch('/config.json')
+    fetch('./config.json')
       .then((res) => {
         if (!res.ok) throw new Error('config not found')
         return res.json()
