@@ -15,6 +15,10 @@
 * Save configuration
 * Add Component dialog
 * Other preload templates
+* Last-modifed timestamps seem to be lost somewhere.  How to keep
+  track of changes to include files for the T tab.  Alternatives:
+  * Add some metadata lines to the files (during build -> gh pages)?
+  * Create a manifest.json during build.
 
 
 ***
