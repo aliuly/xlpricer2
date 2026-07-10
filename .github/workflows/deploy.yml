@@ -28,7 +28,7 @@ jobs:
 
       - name: Build
         run: |
-          make build
+          make build BASE=./
 
       - name: Generate an Excel right away...
         run:  make xlsx XLSX_OUTPUT=dist/prices.xlsx

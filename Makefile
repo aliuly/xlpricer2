@@ -4,6 +4,7 @@ XLSX_ASSUMPTIONS = public/assumptions.csv
 XLSX_COMPONENTS = public/preload.csv
 XLSX_OUTPUT = pricing.xlsx
 PIPELINE_OUTPUT = out.json
+BASE ?= /
 
 
 .PHONY: help install ci dev build preview test pipeline xlsx test
@@ -32,8 +33,8 @@ ci: package-lock.json ## Clean install npm dependencies (for CI/CD)
 dev: node_modules ## Start Vite dev server
 	npm run dev
 
-build: node_modules ## Build for production
-	npm run build
+build: node_modules ## Build for production (use BASE=/repo/ for GH Pages)
+	npm run build -- --base=$(BASE)
 
 preview: build ## Preview production build locally
 	npm run preview
