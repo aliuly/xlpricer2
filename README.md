@@ -187,5 +187,5 @@ The UI supports three modes, persisted in `localStorage`:
 
 ## License
 
-Proprietary / Internal use.
+See [LICENSE](LICENSE)
 

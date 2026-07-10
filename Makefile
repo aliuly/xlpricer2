@@ -6,7 +6,7 @@ XLSX_OUTPUT = pricing.xlsx
 PIPELINE_OUTPUT = out.json
 
 
-.PHONY: help install dev build preview test pipeline xlsx
+.PHONY: help install ci dev build preview test pipeline xlsx test
 
 
 help: ## Show this help
@@ -20,7 +20,14 @@ node_modules: package.json
 lint: node_modules ## run linting
 	npm run lint
 
+test: node_modules ## run tests
+	: no tests currently available
+
 install: node_modules ## Install npm dependencies
+
+ci: package-lock.json ## Clean install npm dependencies (for CI/CD)
+	npm ci
+	@touch node_modules
 
 dev: node_modules ## Start Vite dev server
 	npm run dev
