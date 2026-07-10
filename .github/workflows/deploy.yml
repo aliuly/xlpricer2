@@ -29,7 +29,9 @@ jobs:
       - name: Build
         run: |
           make build
-          make xlsx XLSX_OUTPUT=deploy/prices.xlsx
+
+      - name: Generate an Excel right away...
+        run:  make xlsx XLSX_OUTPUT=dist/prices.xlsx
 
       - name: Prepare deploy directory
         run: |
