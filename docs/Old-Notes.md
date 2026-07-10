@@ -1,0 +1,93 @@
+# NOTES
+
+## Release procedure
+
+Create a branch "prerel" or "prerel-number" to test pre-releases.
+Just push to create artifacts that can be downloaded, or tag with
+"x.y.z-dev" or "x.y.z-rcN" or 'x.y.z-pre' for create pre-releases.
+
+Once ready, merge everything to main.  And commit. The final commit message
+will be used for the release text body.
+
+Create a tag with a "x.y.z" or "x.y.z-rel".  This will be the release
+name.  Once pushed to github, it will automatically create the release.
+
+To delete tags use:
+
+- `git tag -d tagname` : deletes locally
+- `git push origin --delete tagname` : deletes remotely
+
+## TODO
+
+- [x] sphinx docs
+- [x] handle partial starting years.
+
+
+## Ideas for SPA
+
+* Pre-loads
+  - New tab on SPA
+  - User can select other pre-load profiles
+  - User can edit pre-load profiles
+* Component tabs
+  - Build screen lets you specify additional component tabs
+  - Add a Button to add component tabs
+* Additional pricing files
+  - edit current pricing files
+  - add more pricing files
+* authentication
+
+Libraries:
+
+- edit preloads and additions
+  - [tabulator](https://tabulator.info/)
+  - [handsontable](https://github.com/handsontable/handsontable)
+- for simplicity, use [bottle](https://github.com/bottlepy/bottle)
+  - [cork - authentication](https://github.com/FedericoCeratto/bottle-cork) ... probably
+    requires beaker
+  - [beaker - sessions](https://github.com/bottlepy/bottle-beaker)
+  - [jwt](https://github.com/agile4you/bottle-jwt/)
+
+## Run everything from the brwoser
+
+* Pre-requisites
+  * ExcelJS testing
+* price_api
+  * query API **MVP1**
+  * cache it **MVP2**
+* calculation
+  * includes
+    * **MVP2** stubbed
+    * pre-defined files on server
+    * input tables UI
+    * Import CSV
+  * patching
+  * normalize **MVP1**
+  * preload
+    * **MVP2** stubbed
+    * pre-defined files on server
+    * input tables UI
+    * Import CSV
+* wiz UI
+* XLS generation
+  * Support
+    * xlfmt
+    * xlu
+  * xlprice **MVP1**
+  * xlass **MVP2**
+    * pre-defined files on server
+    * input tables UI
+  * xlbom **MVP2**
+    * use preload data
+  * xlesa **MVP5**
+  * xlover **MVP4**
+  * xlvol **MVP3**
+  * ~~xlsrv~~
+
+boostrap
+
+* Vite + TypeScript + React Framework
+* xlpricer - pricer_api
+* In-browser cache
+* Browse using tabulator
+

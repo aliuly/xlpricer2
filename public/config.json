@@ -1,0 +1,17 @@
+{
+  "tabs": ["home", "assumptions", "components"],
+  "assumptions": {
+    "dataUrl": "./assumptions.csv"
+  },
+  "components": {
+    "dataUrl": "./preload.csv"
+  },
+  "home": {
+    "pricesUrl": "https://aliuly.github.io/pipeline/prices-latest.json",
+    "includes": [
+      "includes/included.csv",
+      "includes/dctemp.csv",
+      "includes/oracle.csv"
+    ]
+  }
+}
