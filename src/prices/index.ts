@@ -84,5 +84,9 @@ export function processPricingData(
   normalize(data, x);
   enrich(data, x);
 
+  // Natural sort records by _XlTitle_
+  const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+  data.records.sort((a, b) => collator.compare(a[x._XlTitle_] as string, b[x._XlTitle_] as string));
+
   return data
 }
