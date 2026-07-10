@@ -16,6 +16,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Restore last-commit timestamps on includes
+        run: |
+          for f in public/includes/*; do
+            [ -f "$f" ] || continue
+            ts=$(git log -1 --format=%ct -- "$f")
+            touch -d "@$ts" "$f"
+          done
+
       - uses: actions/setup-node@v4
         with:
           cache: 'npm'
