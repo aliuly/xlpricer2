@@ -5,21 +5,27 @@
 * [x] Volumes Pricing calculation
 * [x] Overview
 * [x] ESA
-* [ ] Fix multitab components
+* [x] Fix multitab components
 * Wizard:
-  * ESA on/off
-  * name
-  * project
-* Re-pricing
-* Prepping
+  * Generate
+    * ESA on/off
+    * name
+    * project
+    * Components tabs?
+  * Update prices tab.
+  * Prep - removes "prices" and "volume" tabs.
 * Save configuration
-* Add Component dialog
-* Other preload templates
+  * Export/import to JSON
+  * Import from XLSX
+* UX
+  * Enter on Last row adds a new empty row
+  * Add Component dialog/Button next to a component to select
+  * Other preload templates.  Add a "bare.csv"
+  * Modify includes
 * Last-modifed timestamps seem to be lost somewhere.  How to keep
   track of changes to include files for the T tab.  Alternatives:
   * Add some metadata lines to the files (during build -> gh pages)?
   * Create a manifest.json during build.
-
 
 ***
 

@@ -50,9 +50,9 @@ export default function BasicView({ pricesUrl, includes }: Props) {
     setBusy(true)
 
     /* load data from localStorage (same keys as HomeTab) */
-    const AS_KEY = 'catbrowser-assumptions-'
-    const COMP_TABS_KEY = 'catbrowser-components-tabs'
-    const COMP_DATA_PREFIX = 'catbrowser-components-'
+    const AS_KEY = 'xlpricer-assumptions-'
+    const COMP_TABS_KEY = 'xlpricer-components-tabs'
+    const COMP_DATA_PREFIX = 'xlpricer-components-'
 
     let assumptions: Record<string, string>[] = []
     let components: Record<string, unknown> = {}

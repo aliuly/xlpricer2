@@ -79,6 +79,12 @@ export default function CsvTabBase<TRow extends { type: 'section' | 'data' }>({
     saveToStorage(config.storagePrefix, tabId, t.getData() as TRow[])
   }, [config.storagePrefix, tabId])
 
+  // Keep a ref to the latest persist so Tabulator event handlers
+  // (bound once in a useEffect) always call the current version
+  // with the correct tabId, even when React reuses this component.
+  const persistRef = useRef(persist)
+  persistRef.current = persist
+
   /* ── Fetch & classify ─────────────────────── */
 
   const fetchFromServer = useCallback(async () => {
@@ -170,11 +176,11 @@ export default function CsvTabBase<TRow extends { type: 'section' | 'data' }>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     table.on('cellEdited', (cell: any) => {
       recheck(cell)
-      persist()
+      persistRef.current()
     })
 
     table.on('rowDeleted', () => {
-      persist()
+      persistRef.current()
     })
 
   }, [rows, visible]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -200,8 +206,8 @@ export default function CsvTabBase<TRow extends { type: 'section' | 'data' }>({
     } else {
       t.addRow(newRow, false)
     }
-    persist()
-  }, [config, persist])
+    persistRef.current()
+  }, [config])
 
   /* ── Render ───────────────────────────────── */
 

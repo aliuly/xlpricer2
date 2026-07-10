@@ -35,7 +35,7 @@ const fallbackTabs: TabDef[] = [
 /* ── Component‑tab helpers ──────────────────── */
 
 const COMP_PREFIX = 'components-'
-const COMP_TABS_KEY = 'catbrowser-components-tabs'
+const COMP_TABS_KEY = 'xlpricer-components-tabs'
 
 interface CompTabMeta { id: string; label: string }
 
@@ -175,7 +175,7 @@ export default function App() {
 
       const metas = loadCompTabMetas().filter(m => m.id !== tabId)
       saveCompTabMetas(metas)
-      try { localStorage.removeItem(`catbrowser-components-${tabId}`) } catch {}
+      try { localStorage.removeItem(`xlpricer-components-${tabId}`) } catch {}
 
       const next = prev.filter(t => t.id !== tabId)
       if (active === tabId) {
@@ -307,6 +307,7 @@ export default function App() {
           </div>
         ) : (
           <ActiveComponent
+            key={tab?.id ?? 'default'}
             tabId={tab?.id ?? 'default'}
             config={tab?.config}
             visible={true}

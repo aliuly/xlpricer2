@@ -68,7 +68,7 @@ function createEmptyRow(): ComponentsRow {
 }
 
 const config: CsvTabConfig<ComponentsRow> = {
-  storagePrefix: 'catbrowser-components-',
+  storagePrefix: 'xlpricer-components-',
   columns,
   classify,
   recheckType,

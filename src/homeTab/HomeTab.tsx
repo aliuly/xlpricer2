@@ -20,9 +20,9 @@ export default function HomeTab({ config }: Props) {
     if (!pricesUrl) return
     setBusy(true)
 
-    const AS_KEY = 'catbrowser-assumptions-'
-    const COMP_TABS_KEY = 'catbrowser-components-tabs'
-    const COMP_DATA_PREFIX = 'catbrowser-components-'
+    const AS_KEY = 'xlpricer-assumptions-'
+    const COMP_TABS_KEY = 'xlpricer-components-tabs'
+    const COMP_DATA_PREFIX = 'xlpricer-components-'
 
     let assumptions: Record<string, string>[] = []
     let components: Record<string, unknown> = {}

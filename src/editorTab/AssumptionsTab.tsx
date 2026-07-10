@@ -52,7 +52,7 @@ function createEmptyRow(): AssumptionsRow {
 }
 
 const config: CsvTabConfig<AssumptionsRow> = {
-  storagePrefix: 'catbrowser-assumptions-',
+  storagePrefix: 'xlpricer-assumptions-',
   columns,
   classify,
   recheckType,
