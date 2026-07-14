@@ -166,18 +166,26 @@ export function writeCell(
   if (style !== undefined) {
     applyStyle(cell, fmt(...style));
   }
+
   if (value === null || value === undefined) {
     // keep default (empty) value, style already applied
     return cell;
   }
-  if (typeof value === 'string' && value.startsWith('=')) {
-    cell.value = { formula: value.substring(1) };
-  } else if (typeof value === 'number') {
+
+  if (typeof value === 'number') {
     cell.value = value;
   } else if (value instanceof Date) {
     cell.value = value;
-  } else if (typeof value === 'string' && isNumeric(value)) {
-    cell.value = Number(value);
+  } else if (typeof value === 'string') {
+    if (value.startsWith('=')) {
+      cell.value = { formula: value.substring(1) };
+    } else if (isNumeric(value)) {
+      cell.value = Number(value);
+    } else if (value === '') {
+      cell.value = null;
+    } else {
+      cell.value = String(value);
+    }
   } else {
     cell.value = String(value);
   }

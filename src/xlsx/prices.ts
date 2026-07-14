@@ -12,7 +12,7 @@ import {
   setColumnWidth,
   sheetRef,
   freezePanes,
-  //~ rowcolToCell,
+  rowcolToCell,
   colToName,
   def,
   //~ dataValidationList,
@@ -145,9 +145,13 @@ export function genPriceSheet(
   console.log("top:", top);
   console.log("bottom:", bottom);
 
-  def(refMap,'prices_desc',`${sheetRef(ws.name)}!${colToName(2,true)}:${colToName(2,true)}`);
-  def(refMap,'prices_region', `${sheetRef(ws.name)}!${colToName(colmap['region'],true)}:${colToName(colmap['region'],true)}`);
-  def(refMap,'prices_table',`${sheetRef(ws.name)}!${colToName(2,true)}:${colToName(right,true)}`);
+  //~ def(refMap,'prices_desc',`${sheetRef(ws.name)}!${colToName(2,true)}:${colToName(2,true)}`);
+  //~ def(refMap,'prices_region', `${sheetRef(ws.name)}!${colToName(colmap['region'],true)}:${colToName(colmap['region'],true)}`);
+  //~ def(refMap,'prices_table',`${sheetRef(ws.name)}!${colToName(2,true)}:${colToName(right,true)}`);
+  def(refMap,'prices_desc',`${rowcolToCell(1,2,true,true,ws.name)}:${rowcolToCell(bottom,2,true,true)}`);
+  def(refMap,'prices_region',`${rowcolToCell(1,colmap['region'],true,true,ws.name)}:${rowcolToCell(bottom,colmap['region'],true,true)}`);
+  def(refMap,'prices_table',`${rowcolToCell(1,2,true,true,ws.name)}:${rowcolToCell(bottom,right,true,true)}`);
+
   def(refMap,'last_sku', String(bottom));
   def(refMap,'last_column', String(right));
   def(refMap,'prices_coord', `${top},${left},${bottom},${right}`);

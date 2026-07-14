@@ -236,7 +236,9 @@ const COMPUTE_COLS: (number|ColumnDef)[] = [
     name: 'f_sku',
     fmt: 'num_c',
     formula: [
-      '=IF(OR({#f_desc}="",{#f_reg}=""),"",MATCH(1,({PRICES_DESC}={#f_desc})*({PRICES_REGION}={#f_reg}),0))',
+      '=IF(OR({#f_desc}="",{#f_reg}=""),"",',
+	  'MATCH(1,INDEX(({PRICES_DESC}={#f_desc})*({PRICES_REGION}={#f_reg}),0),0)',
+	')',
     ],
   },
   {
@@ -248,7 +250,9 @@ const COMPUTE_COLS: (number|ColumnDef)[] = [
     name: 'f_evs_id',
     fmt: 'num_c',
     formula: [
-      '=IF(OR({#f_desc}="",{#f_evs_type}="",{#f_reg}=""),"",XMATCH(1,({PRICES_DESC}="Storage: EVS " & {#f_evs_type})*({PRICES_REGION}={#f_reg}),0))',
+      '=IF(OR({#f_desc}="",{#f_evs_type}="",{#f_reg}=""),"",',
+	'MATCH(1,INDEX(({PRICES_DESC}="Storage: EVS " & {#f_evs_type})*({PRICES_REGION}={#f_reg}),0),0)',
+      ')',
     ],
   },
   {
