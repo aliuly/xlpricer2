@@ -74,6 +74,8 @@ export default function App() {
   useTheme() // still needed — keeps ThemeProvider wired
 
   const [homeConfig, setHomeConfig] = useState<{ pricesUrl?: string; includes?: string[] }>({})
+  const [assumptionsDataUrl, setAssumptionsDataUrl] = useState<string | undefined>()
+  const [componentsDataUrl, setComponentsDataUrl] = useState<string | undefined>()
 
   const handleSetAppMode = useCallback((m: AppMode) => {
     setAppMode(m)
@@ -96,6 +98,8 @@ export default function App() {
 
         compConfigRef.current = (config?.components as Record<string, unknown>) ?? {}
         setHomeConfig((config?.home as { pricesUrl?: string; includes?: string[] }) ?? {})
+        setAssumptionsDataUrl((config?.assumptions as { dataUrl?: string })?.dataUrl)
+        setComponentsDataUrl((config?.components as { dataUrl?: string })?.dataUrl)
 
         const resolved: TabDef[] = []
         for (const name of names) {
@@ -295,7 +299,7 @@ export default function App() {
       </div>
       <div className="flex-1 p-0 overflow-hidden">
         {loading ? null : appMode === 'basic' ? (
-          <BasicView pricesUrl={homeConfig.pricesUrl} includes={homeConfig.includes} />
+          <BasicView pricesUrl={homeConfig.pricesUrl} includes={homeConfig.includes} assumptionsDataUrl={assumptionsDataUrl} componentsDataUrl={componentsDataUrl} />
         ) : appMode === 'includes' ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-4 p-8 text-center">
             <h2 className="text-2xl font-medium text-gray-800 dark:text-gray-100">

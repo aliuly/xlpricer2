@@ -1,10 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Papa from 'papaparse'
+import { classifyAssumptions, classifyComponents } from '../editorTab/classify'
+import type { AssumptionsRow, ComponentsRow } from '../editorTab/classify'
 
 declare const __GIT_VERSION__: string
 
 interface Props {
   pricesUrl?: string
   includes?: string[]
+  assumptionsDataUrl?: string
+  componentsDataUrl?: string
 }
 
 interface SumData {
@@ -24,7 +29,7 @@ function parseSum(text: string): SumData | null {
   }
 }
 
-export default function BasicView({ pricesUrl, includes }: Props) {
+export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, componentsDataUrl }: Props) {
   const [busy, setBusy] = useState(false)
   const [sum, setSum] = useState<SumData | null>(null)
   const workerRef = useRef<Worker | null>(null)
@@ -45,7 +50,7 @@ export default function BasicView({ pricesUrl, includes }: Props) {
     return () => { cancelled = true }
   }, [sumUrl])
 
-  const handleGenerate = useCallback(() => {
+  const handleGenerate = useCallback(async () => {
     if (!pricesUrl) return
     setBusy(true)
 
@@ -54,8 +59,8 @@ export default function BasicView({ pricesUrl, includes }: Props) {
     const COMP_TABS_KEY = 'xlpricer-components-tabs'
     const COMP_DATA_PREFIX = 'xlpricer-components-'
 
-    let assumptions: Record<string, string>[] = []
-    let components: Record<string, unknown> = {}
+    let assumptions: AssumptionsRow[] = []
+    let components: Record<string, ComponentsRow[]> = {}
     try {
       const raw = localStorage.getItem(AS_KEY + 'assumptions')
       if (raw) assumptions = JSON.parse(raw)
@@ -70,6 +75,44 @@ export default function BasicView({ pricesUrl, includes }: Props) {
         }
       }
     } catch {}
+
+    /* Fallback: basic users may not have data in localStorage.
+       Fetch from the configured dataUrl CSV files and classify. */
+    const base = window.location.href
+
+    if (assumptions.length === 0 && assumptionsDataUrl) {
+      try {
+        const url = new URL(assumptionsDataUrl, base).href
+        const res = await fetch(url)
+        if (res.ok) {
+          const text = await res.text()
+          const parsed = Papa.parse<Record<string, string>>(text, {
+            header: true,
+            skipEmptyLines: true,
+            transformHeader: (h: string) => h.trim(),
+            transform: (v: string) => v.trim(),
+          })
+          assumptions = parsed.data.map(classifyAssumptions)
+        }
+      } catch { /* proceed without assumptions */ }
+    }
+
+    if (Object.keys(components).length === 0 && componentsDataUrl) {
+      try {
+        const url = new URL(componentsDataUrl, base).href
+        const res = await fetch(url)
+        if (res.ok) {
+          const text = await res.text()
+          const parsed = Papa.parse<Record<string, string>>(text, {
+            header: true,
+            skipEmptyLines: true,
+            transformHeader: (h: string) => h.trim(),
+            transform: (v: string) => v.trim(),
+          })
+          components['Components'] = parsed.data.map(classifyComponents)
+        }
+      } catch { /* proceed without components */ }
+    }
 
     if (!workerRef.current) {
       workerRef.current = new Worker(
@@ -104,7 +147,6 @@ export default function BasicView({ pricesUrl, includes }: Props) {
       alert('Failed to generate XLSX.')
     }
 
-    const base = window.location.href
     workerRef.current.postMessage({
       assumptions,
       components,
@@ -115,7 +157,7 @@ export default function BasicView({ pricesUrl, includes }: Props) {
         spaUrl: window.location.origin + window.location.pathname,
       },
     })
-  }, [pricesUrl, includes])
+  }, [pricesUrl, includes, assumptionsDataUrl, componentsDataUrl])
 
   return (
     <div className="h-full overflow-auto bg-gray-50 dark:bg-gray-900">

@@ -162,7 +162,7 @@ function wsVolumeGroup(
   }
   c = wsColumn('f_v_total');
   writeCell(
-      ws,
+      ws,s
       r,c,
       `=SUM(${rowcolToCell(r+1,c,false,true)}:${rowcolToCell(r+td._tariffs_.length,c,false,true)})`,
   );
@@ -171,7 +171,7 @@ function wsVolumeGroup(
       ws,
       r,c,
       resolveFormula(
-	  '=IF({#f_v_tiered_vol}<>0,{#f_v_total}/{#f_v_tiered_vol},""',
+	  '=IF({#f_v_tiered_vol}<>0,{#f_v_total}/{#f_v_tiered_vol},"")',
 	  myMap
       )
   );

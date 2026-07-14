@@ -208,7 +208,7 @@ const COMPUTE_COLS: (number|ColumnDef)[] = [
       '=IF({#f_sku}="","",IF(',
 	'INDEX({PRICES_TABLE},{#f_sku},{cm_vCpu})>0,',
 	'INDEX({PRICES_TABLE},{#f_sku},{cm_vCpu}),',
-      '""',
+      '""))',
     ],
   },
   {
@@ -223,7 +223,7 @@ const COMPUTE_COLS: (number|ColumnDef)[] = [
       '=IF({#f_sku}="","",IF(',
 	'INDEX({PRICES_TABLE},{#f_sku},{cm_ram})>0,',
 	'INDEX({PRICES_TABLE},{#f_sku},{cm_ram}),',
-      '""',
+      '""))',
     ],
   },
   3,
@@ -817,7 +817,7 @@ function wsInflationRow(
 		      // Normal calculation
 		      '{#f_tot_qty}*(1+{INFLATION})^({year}-1)',
 		  ')',
-	      ')',
+	      '))',
 	    ].join(''),
 	    {
 	      ...refMap, ...myMap,
