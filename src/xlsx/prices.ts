@@ -142,6 +142,8 @@ export function genPriceSheet(
   let right = c;
 
   autofilter(ws, top-1, left, bottom, right-1);
+  console.log("top:", top);
+  console.log("bottom:", bottom);
 
   def(refMap,'prices_desc',`${sheetRef(ws.name)}!${colToName(2,true)}:${colToName(2,true)}`);
   def(refMap,'prices_region', `${sheetRef(ws.name)}!${colToName(colmap['region'],true)}:${colToName(colmap['region'],true)}`);

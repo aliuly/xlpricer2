@@ -248,7 +248,7 @@ const COMPUTE_COLS: (number|ColumnDef)[] = [
     name: 'f_evs_id',
     fmt: 'num_c',
     formula: [
-      '=IF(OR({#f_desc}="",{#f_evs_type}="",{#f_reg}=""),"",MATCH(1,({PRICES_DESC}="Storage: EVS " & {#f_evs_type})*({PRICES_REGION}={#f_reg}),0))',
+      '=IF(OR({#f_desc}="",{#f_evs_type}="",{#f_reg}=""),"",XMATCH(1,({PRICES_DESC}="Storage: EVS " & {#f_evs_type})*({PRICES_REGION}={#f_reg}),0))',
     ],
   },
   {
