@@ -162,9 +162,9 @@ function wsVolumeGroup(
   }
   c = wsColumn('f_v_total');
   writeCell(
-      ws,s
+      ws,
       r,c,
-      `=SUM(${rowcolToCell(r+1,c,false,true)}:${rowcolToCell(r+td._tariffs_.length,c,false,true)})`,
+      `=SUM(${rowcolToCell(r+1,c,false,true)}:${rowcolToCell(r+td._tariffs_.length,c,false,true)})`
   );
   c = wsColumn('f_v_price');
   writeCell(
