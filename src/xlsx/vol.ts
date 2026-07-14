@@ -12,15 +12,12 @@ import {
   freezePanes,
   rowcolToCell,
   colToName,
-  // @ts-expect-error - dataValidationList
   //~ dataValidationList,
   resolveFormula,
-  // @ts-expect-error - groupColumns
   //~ groupColumns,
   mapCol,
   def,
   updRowRefs,
-  // @ts-expect-error - sheetRef
   //~ sheetRef,
 } from './xlu';
 
