@@ -234,11 +234,21 @@ export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, com
              className="text-magenta-dark dark:text-magenta-light hover:underline font-medium">
             T Cloud Public
           </a>
+          <span>·</span>
+          <a href="https://aliuly.github.io/pipeline/"
+             className="text-magenta-dark dark:text-magenta-light hover:underline font-medium">
+            Price data
+          </a>
+          <span>·</span>
+          <a href="https://github.com/aliuly/xlpricer/blob/main/docs/USERS-GUIDE.md"
+             className="text-magenta-dark dark:text-magenta-light hover:underline font-medium">
+            Usage
+          </a>
         </div>
 
         {/* ── Footer ──────────────────────────── */}
         <footer className="text-center py-6 text-xs text-gray-400 dark:text-gray-600">
-          <a href="https://github.com/aliuly/xlpricer-dev"
+          <a href="https://github.com/aliuly/xlpricer"
              className="text-gray-400 dark:text-gray-500 hover:text-magenta dark:hover:text-magenta-light">
             aliuly/xlpricer
           </a>

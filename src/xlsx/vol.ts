@@ -13,15 +13,15 @@ import {
   rowcolToCell,
   colToName,
   // @ts-expect-error - dataValidationList
-  dataValidationList,
+  //~ dataValidationList,
   resolveFormula,
   // @ts-expect-error - groupColumns
-  groupColumns,
+  //~ groupColumns,
   mapCol,
   def,
   updRowRefs,
   // @ts-expect-error - sheetRef
-  sheetRef,
+  //~ sheetRef,
 } from './xlu';
 
 /* ── Types ─────────────────────────────────── */
@@ -110,8 +110,6 @@ function  wsVolumeHdr(
   ws: Worksheet,
   r: number,
   myMap: Record<string, string>,
-  // @ts-expect-error - temp
-  refMap: Record<string, string>,
 ): void {
   for (let c=1; c < COLUMNS.length ; c++) {
     let col = COLUMNS[c];
@@ -247,10 +245,6 @@ function  wsPerTabHdr(
   r: number,
   coloffs: number,
   tabs: readonly string[],
-  // @ts-expect-error - temp - myMap
-  myMap: Record<string, string>,
-  // @ts-expect-error - temp - refMap
-  refMap: Record<string, string>,
 ): void {
   for (let c=0; c < tabs.length; c++) {
     setColumnWidth(ws, coloffs + c, 12);
@@ -323,8 +317,8 @@ export function genVolumeSheet(
   r += 2;
 
   /* -- Column headings ----------------- */
-  wsVolumeHdr(ws, r, myMap, refMap);
-  wsPerTabHdr(ws, r, coloffs, tabs, myMap, refMap)
+  wsVolumeHdr(ws, r, myMap);
+  wsPerTabHdr(ws, r, coloffs, tabs)
   r++;
   freezePanes(ws, r, 1);
 

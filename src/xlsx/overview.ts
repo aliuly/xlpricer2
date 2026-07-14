@@ -224,8 +224,6 @@ function wsOVYheading(
   year: string,
   months: number,
   myMap: Record<string, string>,
-  // @ts-expect-error - refMap
-  refMap: Record<string, string>,
 ): number {
   /* ── Title ──────────────────────────────────── */
   writeCell(ws, r, 1, 'Yearly Overview', ['overview', 'title']);
@@ -541,7 +539,7 @@ export function genOverviewSheet(
   setColumnWidth(ws, 7+ YEAR_MAX, 18);
 
   let r = Math.max(
-      wsOVYheading(ws,1,year,months,myMap,refMap),
+      wsOVYheading(ws,1,year,months,myMap),
       wsOVMheading(ws,1,tabs,myMap,refMap),
   );
 
