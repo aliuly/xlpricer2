@@ -521,8 +521,8 @@ function  wsStorageProps(
       resolveFormula('={BACKUP_FACT}',{...refMap, ...myMap}),
       ['bom','props','float'],
   );
-  def(myMap, 'WS_DEF_BACKUP', rowcolToCell(r+1,backup));
-  def(myMap, 'WS_BACKUP_FACT', rowcolToCell(r+2,backup));
+  def(myMap, 'WS_DEF_BACKUP', rowcolToCell(r+1,backup,true,true));
+  def(myMap, 'WS_BACKUP_FACT', rowcolToCell(r+2,backup,true,true));
 }
 
 function  wsSheetProps(
