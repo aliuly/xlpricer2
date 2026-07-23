@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { Fragment, useState, useRef, useEffect } from 'react'
 import { useTheme } from '../themes/useTheme'
 import type { ThemeMode } from '../themes/types'
 
@@ -79,13 +79,15 @@ export default function ModeSelector({ mode, onSelectMode }: Props) {
       {open && (
         <div className="absolute top-full left-0 mt-1 w-44 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black/5 z-50 py-1">
           {sectionLabel('Mode')}
-          {MODES.map((m) =>
-            modeItem({
-              active: mode === m.id,
-              label: m.label,
-              onClick: () => { onSelectMode(m.id); setOpen(false) },
-            })
-          )}
+          {MODES.map((m) => (
+            <Fragment key={m.id}>
+              {modeItem({
+                active: mode === m.id,
+                label: m.label,
+                onClick: () => { onSelectMode(m.id); setOpen(false) },
+              })}
+            </Fragment>
+          ))}
           <div className="mx-4 my-1 border-t border-gray-200 dark:border-gray-700" />
           <div className="relative">
             <button
@@ -107,13 +109,15 @@ export default function ModeSelector({ mode, onSelectMode }: Props) {
                 onMouseLeave={() => setThemeSub(false)}
                 className="absolute left-full top-0 ml-1 w-32 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black/5 z-50 py-1"
               >
-                {THEMES.map((t) =>
-                  modeItem({
-                    active: theme === t.id,
-                    label: t.label,
-                    onClick: () => { setTheme(t.id); setThemeSub(false); setOpen(false) },
-                  })
-                )}
+                {THEMES.map((t) => (
+                  <Fragment key={t.id}>
+                    {modeItem({
+                      active: theme === t.id,
+                      label: t.label,
+                      onClick: () => { setTheme(t.id); setThemeSub(false); setOpen(false) },
+                    })}
+                  </Fragment>
+                ))}
               </div>
             )}
           </div>

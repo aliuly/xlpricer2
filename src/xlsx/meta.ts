@@ -9,6 +9,7 @@ import type {
   Worksheet,
 } from 'exceljs';
 
+import type { IncludeMeta } from '../prices/types';
 
 import {
   FORMAT_VERSION,
@@ -33,7 +34,8 @@ export interface FixedPricesMeta {
   schema?: string;
   timestamp?: number;
   params?: Record<string, string | string[]>;
-  includes?: Record<string, string>;
+  /** Include group → version string or IncludeMeta object. */
+  includes?: Record<string, string | IncludeMeta>;
   patches?: Record<string, { count: number; description: string }>;
   choices?: Record<string, string[]>;
 }
@@ -165,10 +167,15 @@ export function genMetaSheet(
       writeCell(ws, r, C_VAL, null, ['meta', 'header', '2']);
       writeCell(ws, r, C_COMMENT, null, ['meta', 'header', '2']);
       r++;
-      for (const [group, version] of entries) {
+      for (const [group, val] of entries) {
+        const version = typeof val === 'string' ? val : val.version;
+        let comment: string | null = null;
+        if (typeof val === 'object' && val !== null) {
+          comment = [val.sha, val.message].filter(Boolean).join(' ') || null;
+        }
         writeCell(ws, r, C_KEY, group, ['meta','key']);
         writeCell(ws, r, C_VAL, version, ['meta', 'value']);
-        writeCell(ws, r, C_COMMENT, null, ['meta', 'comment']);
+        writeCell(ws, r, C_COMMENT, comment, ['meta', 'comment']);
         r++;
       }
     }

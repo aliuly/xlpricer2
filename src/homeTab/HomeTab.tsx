@@ -75,11 +75,42 @@ export default function HomeTab({ config }: Props) {
     }
 
     const base = window.location.href
+
+    // Read enabled standard includes (checkbox state)
+    const enabled = (() => {
+      try {
+        const raw = localStorage.getItem('xlpricer-includes-enabled')
+        return raw ? (JSON.parse(raw) as string[]) : (includes ?? [])
+      } catch { return includes ?? [] }
+    })()
+
+    const includeUrls = (includes ?? [])
+      .filter(u => enabled.includes(u))
+      .map(u => new URL(u, base).href)
+
+    // Read uploaded includes
+    const uploadedIncludes = (() => {
+      try {
+        const raw = localStorage.getItem('xlpricer-includes-uploaded')
+        if (!raw) return []
+        const files: { id: string; displayName: string; uploadedAt: string }[] = JSON.parse(raw)
+        return files.map(f => {
+          const dataRaw = localStorage.getItem(`xlpricer-includes-${f.id}`)
+          return {
+            name: f.displayName,
+            version: f.uploadedAt,
+            records: dataRaw ? JSON.parse(dataRaw) : [],
+          }
+        })
+      } catch { return [] }
+    })()
+
     workerRef.current.postMessage({
       assumptions,
       components,
       dataUrl: pricesUrl,
-      includeUrls: (includes ?? []).map(u => new URL(u, base).href),
+      includeUrls,
+      uploadedIncludes,
       appMeta: {
         version: __GIT_VERSION__,
         spaUrl: window.location.origin + window.location.pathname,
@@ -93,7 +124,7 @@ export default function HomeTab({ config }: Props) {
       {/* ── Header ──────────────────────────── */}
       <header className="bg-gradient-to-br from-magenta to-magenta-dark text-white py-10 px-6 text-center shrink-0">
         <h1 className="text-3xl font-bold mb-2 tracking-wide">
-          📊 XLPricer
+          📊 XLpricer V2
         </h1>
         <p className="text-pink-200 text-base">
           T-Cloud Public pricing spreadsheet generator

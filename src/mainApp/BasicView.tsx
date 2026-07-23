@@ -54,33 +54,13 @@ export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, com
     if (!pricesUrl) return
     setBusy(true)
 
-    /* load data from localStorage (same keys as HomeTab) */
-    const AS_KEY = 'xlpricer-assumptions-'
-    const COMP_TABS_KEY = 'xlpricer-components-tabs'
-    const COMP_DATA_PREFIX = 'xlpricer-components-'
+    /* Always fetch from server data — never use localStorage */
+    const base = window.location.href
 
     let assumptions: AssumptionsRow[] = []
     let components: Record<string, ComponentsRow[]> = {}
-    try {
-      const raw = localStorage.getItem(AS_KEY + 'assumptions')
-      if (raw) assumptions = JSON.parse(raw)
-    } catch {}
-    try {
-      const metasRaw = localStorage.getItem(COMP_TABS_KEY)
-      if (metasRaw) {
-        const metas: { id: string; label: string }[] = JSON.parse(metasRaw)
-        for (const { id, label } of metas) {
-          const dataRaw = localStorage.getItem(COMP_DATA_PREFIX + id)
-          if (dataRaw) components[label] = JSON.parse(dataRaw)
-        }
-      }
-    } catch {}
 
-    /* Fallback: basic users may not have data in localStorage.
-       Fetch from the configured dataUrl CSV files and classify. */
-    const base = window.location.href
-
-    if (assumptions.length === 0 && assumptionsDataUrl) {
+    if (assumptionsDataUrl) {
       try {
         const url = new URL(assumptionsDataUrl, base).href
         const res = await fetch(url)
@@ -97,7 +77,7 @@ export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, com
       } catch { /* proceed without assumptions */ }
     }
 
-    if (Object.keys(components).length === 0 && componentsDataUrl) {
+    if (componentsDataUrl) {
       try {
         const url = new URL(componentsDataUrl, base).href
         const res = await fetch(url)
@@ -147,11 +127,41 @@ export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, com
       alert('Failed to generate XLSX.')
     }
 
+    // Read enabled standard includes (checkbox state)
+    const enabled = (() => {
+      try {
+        const raw = localStorage.getItem('xlpricer-includes-enabled')
+        return raw ? (JSON.parse(raw) as string[]) : (includes ?? [])
+      } catch { return includes ?? [] }
+    })()
+
+    const includeUrls = (includes ?? [])
+      .filter(u => enabled.includes(u))
+      .map(u => new URL(u, base).href)
+
+    // Read uploaded includes
+    const uploadedIncludes = (() => {
+      try {
+        const raw = localStorage.getItem('xlpricer-includes-uploaded')
+        if (!raw) return []
+        const files: { id: string; displayName: string; uploadedAt: string }[] = JSON.parse(raw)
+        return files.map(f => {
+          const dataRaw = localStorage.getItem(`xlpricer-includes-${f.id}`)
+          return {
+            name: f.displayName,
+            version: f.uploadedAt,
+            records: dataRaw ? JSON.parse(dataRaw) : [],
+          }
+        })
+      } catch { return [] }
+    })()
+
     workerRef.current.postMessage({
       assumptions,
       components,
       dataUrl: pricesUrl,
-      includeUrls: (includes ?? []).map(u => new URL(u, base).href),
+      includeUrls,
+      uploadedIncludes,
       appMeta: {
         version: __GIT_VERSION__,
         spaUrl: window.location.origin + window.location.pathname,
@@ -164,7 +174,7 @@ export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, com
       {/* ── Header ──────────────────────────── */}
       <header className="bg-gradient-to-br from-magenta to-magenta-dark text-white py-10 px-6 text-center">
         <h1 className="text-3xl font-bold mb-2 tracking-wide">
-          📊 XLPricer
+          📊 XLpricer V2
         </h1>
         <p className="text-pink-200 text-base">
           T-Cloud Public pricing spreadsheet generator
@@ -192,7 +202,7 @@ export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, com
               📥 Generate pricing spreadsheet
             </span>
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              Ready-to-use XLSX with current pricing data,
+              Ready-to-use XLSX with standard pricing data,
               assumptions &amp; components.
             </span>
           </button>

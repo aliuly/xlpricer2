@@ -58,8 +58,13 @@ export function processPricingData(
   // INCLUDE handling
   if (! data.includes) data.includes = {};
   if (options.includes) {
-    for (const [grp, { version, records }] of Object.entries(options.includes)) {
-      data.includes[grp] = version;
+    for (const [grp, { version, sha, message, records }] of Object.entries(options.includes)) {
+      // Store full metadata when available, otherwise just the version string
+      if (sha || message) {
+        data.includes[grp] = { version, ...(sha ? { sha } : {}), ...(message ? { message } : {}) };
+      } else {
+        data.includes[grp] = version;
+      }
       for (const rec of records) {
         for (const [k, v] of Object.entries(INCLUDE_DEFAULTS)) {
           if (k in rec) continue;

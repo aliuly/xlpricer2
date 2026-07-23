@@ -1,4 +1,4 @@
-# XLPricer v2
+# XLpricer V2
 
 **T-Cloud Public pricing spreadsheet generator**
 
@@ -11,6 +11,8 @@ discounts, and Enterprise Support Agreement (ESA) calculations.
 
 - **Browser UI** — Edit assumptions and bill-of-materials components in
   interactive tabulator-based tables, then export to XLSX.
+- **Includes management** — Toggle standard pricing data includes and upload
+  additional CSV files via drag-and-drop, with metadata from manifest files.
 - **CLI pipeline** — Fetch, normalize, and enrich pricing data from the
   command line (`npx tsx src/prices/cli.ts`).
 - **XLSX generation** — Produce a formatted workbook with Overview, Components
@@ -55,7 +57,7 @@ src/
 ├── main.tsx                  # React entry point
 ├── mainApp/                  # App shell, mode selector, Basic view
 ├── homeTab/                  # Home screen and XLSX web worker
-├── editorTab/                # Assumptions & Components table editors
+├── editorTab/                # Assumptions, Components, & Includes table editors
 ├── defaultTab/               # Fallback tab
 ├── themes/                   # Theme provider and CSS variable defs
 ├── prices/                   # Pricing data pipeline
@@ -141,19 +143,21 @@ The browser app reads `public/config.json` on startup:
 
 | Key | Description |
 |-----|-------------|
-| `tabs` | Ordered list of tab IDs: `"home"`, `"assumptions"`, `"components"` |
+| `tabs` | Ordered list of tab IDs: `"home"`, `"includes"`, `"assumptions"`, `"components"` |
 | `home.pricesUrl` | URL to fetch pricing JSON from |
-| `home.includes` | Array of CSV include file URLs |
+| `includes.files` | Array of standard include CSV file URLs (shown in the Includes tab) |
 | `assumptions.dataUrl` | CSV file for preloaded assumptions |
 | `components.dataUrl` | CSV file for preloaded components |
 
 ### App Modes
 
-The UI supports three modes, persisted in `localStorage`:
+The UI supports two modes, persisted in `localStorage`:
 
-- **Basic** — One-click XLSX generation with pricing metadata display.
-- **Custom** — Tabbed editor for assumptions, components, and XLSX export.
-- **Includes** — (Planned) Manage pricing data include files.
+- **Basic** — One-click XLSX generation from server-side data. Loads
+  assumptions and components directly from configured CSV URLs.
+- **Custom** — Tabbed editor for assumptions, components, includes, and
+  XLSX export. The Includes tab lets you toggle standard pricing data
+  includes and upload additional CSV files via drag-and-drop.
 
 ## Tech Stack
 

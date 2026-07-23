@@ -1,5 +1,15 @@
 /* ── Pricing data types ──────────────────── */
 
+/** Metadata for an included CSV file. */
+export interface IncludeMeta {
+  /** ISO 8601 timestamp (git commit date, file mtime, or Last-Modified). */
+  version: string;
+  /** Short git SHA of the commit that last changed this file. */
+  sha?: string;
+  /** First line of the commit message. */
+  message?: string;
+}
+
 /**
  * Column-oriented (flattened) format
  */
@@ -19,7 +29,8 @@ export interface PricesData {
   cksum?: string;
   generatedBy?: string;
   /* --- additional metadata ------- */
-  includes?: Record<string, string>;
+  /** Include group → version string or IncludeMeta object. */
+  includes?: Record<string, string | IncludeMeta>;
   patches?: Record<string, {
     count: number;
     description: string;
@@ -35,9 +46,8 @@ export interface PricesData {
  * Options controlling pipeline behaviour.
  */
 export interface PipelineOptions {
-  /** Included data — keyed by filename stem, with version and parsed records. */
-  includes?: Record<string, {
-    version: string;
+  /** Included data — keyed by filename stem, with metadata and parsed records. */
+  includes?: Record<string, IncludeMeta & {
     records: Record<string, unknown>[];
   }>;
   /** Log progress to stderr. */

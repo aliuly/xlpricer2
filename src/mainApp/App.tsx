@@ -5,6 +5,7 @@ import DefaultTab from '../defaultTab/DefaultTab'
 import HomeTab from '../homeTab/HomeTab'
 import AssumptionsTab from '../editorTab/AssumptionsTab'
 import ComponentsTab from '../editorTab/ComponentsTab'
+import IncludesTab from '../editorTab/IncludesTab'
 import ModeSelector from './ModeSelector'
 import BasicView from './BasicView'
 import type { AppMode } from './ModeSelector'
@@ -26,6 +27,7 @@ const tabRegistry: Record<string, { label: string; Component: ComponentType<TabP
   default:      { label: 'Default',      Component: DefaultTab },
   home:         { label: 'Home',         Component: HomeTab },
   assumptions:  { label: 'Assumptions',  Component: AssumptionsTab },
+  includes:     { label: 'Includes',     Component: IncludesTab },
 }
 
 const fallbackTabs: TabDef[] = [
@@ -86,18 +88,26 @@ export default function App() {
 
   useEffect(() => {
     let cancelled = false
-    fetch('./config.json')
+    const configUrl = new URL('./config.json', window.location.href).href
+    fetch(configUrl)
       .then((res) => {
-        if (!res.ok) throw new Error('config not found')
+        if (!res.ok) throw new Error(`config not found (${res.status})`)
         return res.json()
       })
       .then((config) => {
         if (cancelled) return
         const names: unknown = config?.tabs
-        if (!Array.isArray(names) || names.length === 0) return
+        if (!Array.isArray(names) || names.length === 0) {
+          console.warn('[App] Config tabs is not a valid array — using fallback')
+          return
+        }
 
         compConfigRef.current = (config?.components as Record<string, unknown>) ?? {}
-        setHomeConfig((config?.home as { pricesUrl?: string; includes?: string[] }) ?? {})
+        const includesFiles: string[] = (config?.includes as Record<string, unknown>)?.files as string[] ?? []
+        setHomeConfig({
+          ...(config?.home as { pricesUrl?: string }),
+          includes: includesFiles,
+        })
         setAssumptionsDataUrl((config?.assumptions as { dataUrl?: string })?.dataUrl)
         setComponentsDataUrl((config?.components as { dataUrl?: string })?.dataUrl)
 
@@ -121,12 +131,20 @@ export default function App() {
           } else if (typeof name === 'string') {
             const entry = tabRegistry[name]
             if (entry) {
+              let tabConfig = config[name]
+              if (name === 'home') {
+                tabConfig = { ...(tabConfig as Record<string, unknown>), includes: includesFiles }
+              } else if (name === 'includes') {
+                tabConfig = { ...(tabConfig as Record<string, unknown>), standardIncludes: includesFiles }
+              }
               resolved.push({
                 id: name,
                 label: entry.label,
                 Component: entry.Component,
-                config: config[name],
+                config: tabConfig,
               })
+            } else {
+              console.warn(`[App] Unknown tab "${name}" — skipping`)
             }
           }
         }
@@ -135,8 +153,8 @@ export default function App() {
           setActive(resolved[0].id)
         }
       })
-      .catch(() => {
-        // config missing or invalid — keep fallback
+      .catch((err) => {
+        console.error('[App] Config load failed:', err)
       })
       .finally(() => {
         if (!cancelled) setLoading(false)

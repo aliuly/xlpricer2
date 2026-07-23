@@ -7,7 +7,7 @@ PIPELINE_OUTPUT = out.json
 BASE ?= /
 
 
-.PHONY: help install ci dev build preview test pipeline xlsx test
+.PHONY: help install ci dev build preview test pipeline xlsx manifest test
 
 
 help: ## Show this help
@@ -30,10 +30,27 @@ ci: package-lock.json ## Clean install npm dependencies (for CI/CD)
 	npm ci
 	@touch node_modules
 
-dev: node_modules ## Start Vite dev server
+manifest: ## Generate includes/manifest.json from git history
+	@echo "Generating includes manifest…"
+	@for f in public/includes/*.csv; do \
+		[ -f "$$f" ] || continue; \
+		name=$$(basename "$$f"); \
+		ts=$$(git log -1 --format=%cI -- "$$f"); \
+		sha=$$(git log -1 --format=%h -- "$$f"); \
+		msg=$$(git log -1 --format=%s -- "$$f"); \
+		echo "  $$name -> $$ts ($$sha) $$msg"; \
+	done
+	@python3 -c '\
+	import json, subprocess, os, glob; \
+	out={}; \
+	[out.update({os.path.basename(f):{"version":subprocess.check_output(["git","log","-1","--format=%cI","--",f]).decode().strip(),"sha":subprocess.check_output(["git","log","-1","--format=%h","--",f]).decode().strip(),"message":subprocess.check_output(["git","log","-1","--format=%s","--",f]).decode().strip()}} if os.path.isfile(f) else None) for f in sorted(glob.glob("public/includes/*.csv"))]; \
+	json.dump(out, open("public/includes/manifest.json","w"), indent=2); \
+	print("Wrote public/includes/manifest.json")'
+
+dev: manifest node_modules ## Start Vite dev server
 	npm run dev
 
-build: node_modules ## Build for production (use BASE=/repo/ for GH Pages)
+build: manifest node_modules ## Build for production (use BASE=/repo/ for GH Pages)
 	npm run build -- --base=$(BASE)
 
 preview: build ## Preview production build locally

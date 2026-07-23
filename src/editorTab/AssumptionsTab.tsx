@@ -69,6 +69,7 @@ interface Props {
 
 export default function AssumptionsTab({ tabId, config: tabConfig, visible }: Props) {
   const dataUrl = (tabConfig?.dataUrl as string) ?? '/data/assumptions.csv'
+  const seed = (tabConfig?.seed as boolean) ?? true
 
   return (
     <CsvTabBase
@@ -77,6 +78,7 @@ export default function AssumptionsTab({ tabId, config: tabConfig, visible }: Pr
       label="Assumptions"
       config={config}
       visible={visible}
+      seed={seed}
     />
   )
 }
