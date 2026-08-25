@@ -4,6 +4,7 @@
 - 2.0.0: Rewrite to TypeScript
   - refactor application into Single Page App.
   - spin off REST API query and caching to another project: https://github.com/aliuly/pipeline
+  - Apply naming convention rules
 ***
 - 1.8.0:
   - Added a temp fix for wrong m9 productName's

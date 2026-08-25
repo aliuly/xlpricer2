@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Papa from 'papaparse'
 import { classifyAssumptions, classifyComponents } from '../editorTab/classify'
+import DealInfoFields from './DealInfoFields'
+import { loadDealInfo, dealInfoFilename } from './useDealInfo'
 import type { AssumptionsRow, ComponentsRow } from '../editorTab/classify'
 
 declare const __GIT_VERSION__: string
@@ -117,7 +119,7 @@ export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, com
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = 'pricing.xlsx'
+      a.download = dealInfoFilename(loadDealInfo())
       a.click()
       URL.revokeObjectURL(url)
     }
@@ -206,6 +208,14 @@ export default function BasicView({ pricesUrl, includes, assumptionsDataUrl, com
               assumptions &amp; components.
             </span>
           </button>
+        </div>
+
+        {/* Deal info */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_4px_16px_rgba(226,0,116,0.08)] dark:shadow-none border border-gray-200 dark:border-gray-700 p-6 mb-6">
+          <h2 className="text-lg font-semibold text-magenta-dark dark:text-magenta-light mb-4 flex items-center gap-2">
+            📇 Deal info
+          </h2>
+          <DealInfoFields />
         </div>
 
         {/* Pricing data */}

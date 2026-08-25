@@ -1,4 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
+import DealInfoFields from '../mainApp/DealInfoFields'
+import { loadDealInfo, dealInfoFilename } from '../mainApp/useDealInfo'
 
 declare const __GIT_VERSION__: string
 
@@ -64,7 +66,7 @@ export default function HomeTab({ config }: Props) {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = 'pricing.xlsx'
+      a.download = dealInfoFilename(loadDealInfo())
       a.click()
       URL.revokeObjectURL(url)
     }
@@ -119,7 +121,7 @@ export default function HomeTab({ config }: Props) {
   }, [homeConfig])
 
   return (
-    <div className="relative flex-1 flex flex-col overflow-auto bg-gray-50 dark:bg-gray-900">
+    <div className="relative h-full flex flex-col overflow-auto bg-gray-50 dark:bg-gray-900">
 
       {/* ── Header ──────────────────────────── */}
       <header className="bg-gradient-to-br from-magenta to-magenta-dark text-white py-10 px-6 text-center shrink-0">
@@ -164,6 +166,14 @@ export default function HomeTab({ config }: Props) {
             </button>
           </li>
         </ul>
+      </div>
+
+      {/* ── Deal info ──────────────────────── */}
+      <div className="w-full max-w-sm">
+        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 text-left">
+          Deal info
+        </h3>
+        <DealInfoFields />
       </div>
 
       {/* ── Version ──────────────────────── */}
