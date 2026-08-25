@@ -23,17 +23,12 @@ Special pricing can be added by uploading "csv" files in the custom
 UI.
 
 ## TODO
-* [x] Fix Inflation calculation
-* [x] Volumes Pricing calculation
-* [x] Overview
-* [x] ESA
-* [x] Fix multitab components
 * [ ] be more compatible with V1... use similar file naming.
 * Wizard:
   * Generate
     * ESA on/off
-    * name
-    * project
+    * name?
+    * project?
   * Update prices tab.
   * Prep - removes "prices" and "volume" tabs.
 * Save configuration
